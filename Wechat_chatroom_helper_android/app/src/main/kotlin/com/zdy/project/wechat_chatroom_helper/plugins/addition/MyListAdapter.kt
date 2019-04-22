@@ -61,11 +61,18 @@ class MyListAdapter(val mContext: Activity, val data: MutableList<DataModel>, va
 
         itemView.setOnClickListener {
 
-            val addContactClass = C.m
+//            val addContactClass = C.m
+//            val constructor = XposedHelpers.findConstructorExact(addContactClass, String::class.java, String::class.java, Int::class.java)
+//            constructor.isAccessible = true
+//            val m = constructor.newInstance(data.sayhiuser, data.ticket, data.scene)
+//            val auDF = XposedHelpers.callStaticMethod(C.au, "DF")
+//            XposedHelpers.callMethod(auDF, "a", m, 0)
+
+                        val addContactClass = C.m
             val constructor = XposedHelpers.findConstructorExact(addContactClass, String::class.java, String::class.java, Int::class.java)
             constructor.isAccessible = true
             val m = constructor.newInstance(data.sayhiuser, data.ticket, data.scene)
-            val auDF = XposedHelpers.callStaticMethod(C.au, "DF")
+            val auDF = XposedHelpers.callStaticMethod(C.au, "Rg")
             XposedHelpers.callMethod(auDF, "a", m, 0)
         }
 

@@ -41,8 +41,8 @@ class SpecialPluginEntry : IXposedHookLoadPackage {
             LogHook.hook(classLoader)
             DataBaseHook.hook(classLoader)
             FConversationHook.hook(classLoader)
-            LBSFriendHook.hook(classLoader)
-            ShakeHook.hook(classLoader)
+           // LBSFriendHook.hook(classLoader)
+           // ShakeHook.hook(classLoader)
 
 
         } catch (e: Exception) {

@@ -40,7 +40,7 @@ object FConversationHook {
 
                 val thisObject = param.thisObject as Activity
 
-                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 700, "清除`已", object : MenuItem.OnMenuItemClickListener {
+                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 1, "清除`已", object : MenuItem.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
 
                         try {
@@ -75,7 +75,7 @@ object FConversationHook {
                     }
                 })
 
-                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 701, "清除`未", object : MenuItem.OnMenuItemClickListener {
+                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 2, "清除`未", object : MenuItem.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
 
                         AlertDialog.Builder(thisObject).setTitle("提示")
@@ -128,61 +128,61 @@ object FConversationHook {
                     }
                 })
 
-//                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 702, "加扫", object : MenuItem.OnMenuItemClickListener {
-//                    override fun onMenuItemClick(item: MenuItem?): Boolean {
-//
-//                        val cursor: Cursor = XposedHelpers.callMethod(DataBaseHook.msgDataBase, "rawQueryWithFactory",
-//                                DataBaseHook.msgDataBaseFactory, "SELECT * FROM fmessage_conversation where addScene = 30 and state = 0", null, null) as Cursor
-//
-//                        val data = mutableListOf<DataModel>()
-//
-//                        while (cursor.moveToNext()) {
-//                            val fmsgContent = cursor.getString(cursor.getColumnIndex("fmsgContent"))
-//                            val talker = cursor.getString(cursor.getColumnIndex("talker"))
-//                            val displayName = cursor.getString(cursor.getColumnIndex("displayName"))
-//
-//
-//
-//                            LogUtils.log("fmessage_conversation, fmsgContent = $fmsgContent")
-//
-//
-//                            val db = dbf.newDocumentBuilder()
-//                            val sr = StringReader(fmsgContent)
-//                            val doc = db.parse(InputSource(sr))
-//
-//
-//                            data.add(DataModel().apply {
-//                                ticket = doc.getElementsByTagName("msg").item(0).attributes.getNamedItem("ticket").nodeValue
-//                                sayhiuser = talker
-//                                isAdd = 0
-//                                scene = 30
-//                                username = displayName
-//                            })
-//
-//                        }
-//
-//                        val myListAdapter = MyListAdapter(thisObject as Activity, data, C)
-//
-//                        val dialogView = getDialogView(thisObject as Activity)
-//                        val listView = dialogView.findViewById<ListView>(android.R.id.list) as ListView
-//                        val editText = dialogView.findViewById<EditText>(android.R.id.edit) as EditText
-//
-//                        listView.adapter = myListAdapter
-//
-//                        AlertDialog.Builder(thisObject as Activity).setTitle("自动添加好友").setView(dialogView)
-//                                .setPositiveButton("一键添加好友", object : DialogInterface.OnClickListener {
-//                                    override fun onClick(dialog: DialogInterface, which: Int) {
-//                                        SpecialPluginEntry.time = editText.text.toString().toInt().toLong()
-//                                        myListAdapter.addAllContact()
-//                                        dialog.dismiss()
-//                                    }
-//                                }).show()
-//
-//
-//
-//                        return true
-//                    }
-//                })
+                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 702, "加扫", object : MenuItem.OnMenuItemClickListener {
+                    override fun onMenuItemClick(item: MenuItem?): Boolean {
+
+                        val cursor: Cursor = XposedHelpers.callMethod(DataBaseHook.msgDataBase, "rawQueryWithFactory",
+                                DataBaseHook.msgDataBaseFactory, "SELECT * FROM fmessage_conversation where addScene = 30 and state = 0", null, null) as Cursor
+
+                        val data = mutableListOf<DataModel>()
+
+                        while (cursor.moveToNext()) {
+                            val fmsgContent = cursor.getString(cursor.getColumnIndex("fmsgContent"))
+                            val talker = cursor.getString(cursor.getColumnIndex("talker"))
+                            val displayName = cursor.getString(cursor.getColumnIndex("displayName"))
+
+
+
+                            LogUtils.log("fmessage_conversation, fmsgContent = $fmsgContent")
+
+
+                            val db = dbf.newDocumentBuilder()
+                            val sr = StringReader(fmsgContent)
+                            val doc = db.parse(InputSource(sr))
+
+
+                            data.add(DataModel().apply {
+                                ticket = doc.getElementsByTagName("msg").item(0).attributes.getNamedItem("ticket").nodeValue
+                                sayhiuser = talker
+                                isAdd = 0
+                                scene = 30
+                                username = displayName
+                            })
+
+                        }
+
+                        val myListAdapter = MyListAdapter(thisObject as Activity, data, C)
+
+                        val dialogView = getDialogView(thisObject as Activity)
+                        val listView = dialogView.findViewById<ListView>(android.R.id.list) as ListView
+                        val editText = dialogView.findViewById<EditText>(android.R.id.edit) as EditText
+
+                        listView.adapter = myListAdapter
+
+                        AlertDialog.Builder(thisObject as Activity).setTitle("自动添加好友").setView(dialogView)
+                                .setPositiveButton("一键添加好友", object : DialogInterface.OnClickListener {
+                                    override fun onClick(dialog: DialogInterface, which: Int) {
+                                        SpecialPluginEntry.time = editText.text.toString().toInt().toLong()
+                                        myListAdapter.addAllContact()
+                                        dialog.dismiss()
+                                    }
+                                }).show()
+
+
+
+                        return true
+                    }
+                })
 
             }
         })

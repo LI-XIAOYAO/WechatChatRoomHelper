@@ -23,7 +23,7 @@ object DataBaseHook {
 
 
         XposedHelpers.findAndHookMethod(DBClass, "rawQueryWithFactory",
-                XposedHelpers.findClass(DBF, classLoader), C.String, C.StringArray, C.String,
+                XposedHelpers.findClass(DBF, classLoader), C.String, C.ObjectArray, C.String,
                 XposedHelpers.findClass(DBSIGN, classLoader), object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
 
