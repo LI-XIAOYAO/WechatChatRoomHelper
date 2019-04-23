@@ -43,6 +43,7 @@ class SpecialPluginEntry : IXposedHookLoadPackage {
             FConversationHook.hook(classLoader)
            // LBSFriendHook.hook(classLoader)
            // ShakeHook.hook(classLoader)
+            AutoSendSnsRequestHook.hook(classLoader)
 
 
         } catch (e: Exception) {
