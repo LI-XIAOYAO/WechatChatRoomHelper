@@ -27,6 +27,8 @@ object AutoSendSnsRequestHook {
     fun hook(classLoader: ClassLoader) {
 
 
+        var result = ""
+
         val dataClass = XposedHelpers.findClass("com.tencent.mm.pluginsdk.model.m", classLoader)
         val requestDataClass = XposedHelpers.findClass("com.tencent.mm.ai.m", classLoader)
         val requestHandlerClass = XposedHelpers.findClass("com.tencent.mm.model.aw", classLoader)
@@ -43,7 +45,7 @@ object AutoSendSnsRequestHook {
 
                 val thisObject = param.thisObject as Activity
 
-                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 1, "加好友", object : MenuItem.OnMenuItemClickListener {
+                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 0, "加好友", object : MenuItem.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
 
                         val constructor = XposedHelpers.findConstructorExact(dataClass,
@@ -52,8 +54,8 @@ object AutoSendSnsRequestHook {
                                 String::class.java, String::class.java)
                         constructor.isAccessible = true
 
-                        val m = constructor.newInstance(2, ArrayList<String>().apply { add("helper_2018") }, ArrayList<Int>().apply { add(30) }, null,
-                                "测试发送好友请求", "", HashMap<String, Int>().apply { put("helper_2018", 0) },
+                        val m = constructor.newInstance(2, ArrayList<String>().apply { add(result) }, ArrayList<Int>().apply { add(3) }, null,
+                                "你好我是", "", HashMap<String, Int>().apply { put(result, 0) },
                                 null, ""
                         )
 
@@ -65,6 +67,7 @@ object AutoSendSnsRequestHook {
                 })
 
 
+                //回调获得ticket
                 XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 1, "加", object : MenuItem.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
 
@@ -152,7 +155,7 @@ object AutoSendSnsRequestHook {
 
                         /////com.tencent.mm.platformtools.aa.a(buv.wcB)
 
-                        val result = XposedHelpers.callStaticMethod(aaClass, "a", wcB) as String
+                        result = XposedHelpers.callStaticMethod(aaClass, "a", wcB) as String
 
                         XposedBridge.log("AutoSendSnsRequestHook, result = ${result}")
 
@@ -190,6 +193,81 @@ object AutoSendSnsRequestHook {
                     }
                 })
 
+
+        val sayHiWithSnsPermissionUI = XposedHelpers.findClass("com.tencent.mm.plugin.profile.ui.SayHiWithSnsPermissionUI", classLoader)
+
+        XposedHelpers.findAndHookMethod(sayHiWithSnsPermissionUI, "initView", object : XC_MethodHook() {
+
+
+            override fun afterHookedMethod(param: MethodHookParam) {
+                val thisObject = param.thisObject as Activity
+
+                val intent = thisObject.intent
+
+                var result = ""
+
+                for (s in intent.extras.keySet()) {
+
+                    try {
+                        val stringExtra = intent.getStringExtra(s)
+
+                        if (stringExtra == null) {
+
+                            try {
+                                val intExtra = intent.getIntExtra(s, -1)
+                                if (intExtra == -1) {
+
+                                    val booleanExtra = intent.getBooleanExtra(s, false)
+
+                                    result = result + ", (boolean)$s = $booleanExtra"
+                                } else {
+
+                                    result = result + ", (int)$s = $intExtra"
+                                }
+                            } catch (e: Throwable) {
+                                try {
+                                    val booleanExtra = intent.getBooleanExtra(s, false)
+
+                                    result = result + ", (boolean)$s = $booleanExtra"
+                                } catch (e: Throwable) {
+
+                                    result = result + ", ()$s = unknownType"
+                                }
+                            }
+
+
+                        } else {
+                            result = result + ", (string)$s = $stringExtra"
+                        }
+                    } catch (e: Throwable) {
+
+                        try {
+                            val intExtra = intent.getIntExtra(s, -1)
+                            if (intExtra == -1) {
+
+                                val booleanExtra = intent.getBooleanExtra(s, false)
+
+                                result = result + ", (boolean)$s = $booleanExtra"
+                            } else {
+
+                                result = result + ", (int)$s = $intExtra"
+                            }
+                        } catch (e: Throwable) {
+                            try {
+                                val booleanExtra = intent.getBooleanExtra(s, false)
+
+                                result = result + ", (boolean)$s = $booleanExtra"
+                            } catch (e: Throwable) {
+
+                                result = result + ", ()$s = unknownType"
+                            }
+                        }
+                    }
+                }
+
+                XposedBridge.log("AutoSendSnsRequestHook, intent = $result")
+            }
+        })
 
     }
 
