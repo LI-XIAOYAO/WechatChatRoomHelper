@@ -18,6 +18,7 @@ import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import org.xml.sax.InputSource
 import java.io.StringReader
+import java.lang.Exception
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
@@ -45,7 +46,7 @@ object AutoSendSnsRequestHook {
 
                 val thisObject = param.thisObject as Activity
 
-                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 0, "加好友", object : MenuItem.OnMenuItemClickListener {
+                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 0, "??? ???", object : MenuItem.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
 
                         val constructor = XposedHelpers.findConstructorExact(dataClass,
@@ -68,7 +69,7 @@ object AutoSendSnsRequestHook {
 
 
                 //回调获得ticket
-                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 1, "加", object : MenuItem.OnMenuItemClickListener {
+                XposedHelpers.callMethod(thisObject, "addTextOptionMenu", 1, "Get Ticket", object : MenuItem.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
 
                         val interface1 = XposedHelpers.findClass("com.tencent.mm.ai.f", classLoader)
@@ -155,7 +156,12 @@ object AutoSendSnsRequestHook {
 
                         /////com.tencent.mm.platformtools.aa.a(buv.wcB)
 
-                        result = XposedHelpers.callStaticMethod(aaClass, "a", wcB) as String
+                        result = try {
+                            XposedHelpers.callStaticMethod(aaClass, "a", wcB) as String
+                        }catch (e: Exception){
+                            e.printStackTrace()
+                            "null"
+                        }
 
                         XposedBridge.log("AutoSendSnsRequestHook, result = ${result}")
 
@@ -198,74 +204,40 @@ object AutoSendSnsRequestHook {
 
         XposedHelpers.findAndHookMethod(sayHiWithSnsPermissionUI, "initView", object : XC_MethodHook() {
 
-
             override fun afterHookedMethod(param: MethodHookParam) {
                 val thisObject = param.thisObject as Activity
 
                 val intent = thisObject.intent
 
-                var result = ""
+                var sayhi_with_sns_permission = intent.getBooleanExtra("sayhi_with_sns_permission", false)
+                var sayhi_with_sns_perm_send_verify = intent.getBooleanExtra("sayhi_with_sns_perm_send_verify", false)
+                var sayhi_with_jump_to_profile = intent.getBooleanExtra("sayhi_with_jump_to_profile", false)
+                var sayhi_with_sns_perm_add_remark = intent.getBooleanExtra("sayhi_with_sns_perm_add_remark", false)
+                var sayhi_with_sns_perm_set_label = intent.getBooleanExtra("sayhi_with_sns_perm_set_label", false)
+                var Contact_User = intent.getStringExtra("Contact_User")
+                var Contact_Scene = intent.getIntExtra("Contact_Scene", 9)
+                var room_name = intent.getStringExtra("room_name")
+                var Contact_RemarkName = intent.getStringExtra("Contact_RemarkName")
+                var Contact_Nick = intent.getStringExtra("Contact_Nick")
+                var Contact_RoomNickname = intent.getStringExtra("Contact_RoomNickname")
+                var source_from_user_name = intent.getStringExtra("source_from_user_name")
+                var source_from_nick_name = intent.getStringExtra("source_from_nick_name")
+                var Verify_ticket = intent.getStringExtra("Verify_ticket")
 
-                for (s in intent.extras.keySet()) {
-
-                    try {
-                        val stringExtra = intent.getStringExtra(s)
-
-                        if (stringExtra == null) {
-
-                            try {
-                                val intExtra = intent.getIntExtra(s, -1)
-                                if (intExtra == -1) {
-
-                                    val booleanExtra = intent.getBooleanExtra(s, false)
-
-                                    result = result + ", (boolean)$s = $booleanExtra"
-                                } else {
-
-                                    result = result + ", (int)$s = $intExtra"
-                                }
-                            } catch (e: Throwable) {
-                                try {
-                                    val booleanExtra = intent.getBooleanExtra(s, false)
-
-                                    result = result + ", (boolean)$s = $booleanExtra"
-                                } catch (e: Throwable) {
-
-                                    result = result + ", ()$s = unknownType"
-                                }
-                            }
-
-
-                        } else {
-                            result = result + ", (string)$s = $stringExtra"
-                        }
-                    } catch (e: Throwable) {
-
-                        try {
-                            val intExtra = intent.getIntExtra(s, -1)
-                            if (intExtra == -1) {
-
-                                val booleanExtra = intent.getBooleanExtra(s, false)
-
-                                result = result + ", (boolean)$s = $booleanExtra"
-                            } else {
-
-                                result = result + ", (int)$s = $intExtra"
-                            }
-                        } catch (e: Throwable) {
-                            try {
-                                val booleanExtra = intent.getBooleanExtra(s, false)
-
-                                result = result + ", (boolean)$s = $booleanExtra"
-                            } catch (e: Throwable) {
-
-                                result = result + ", ()$s = unknownType"
-                            }
-                        }
-                    }
-                }
-
-                XposedBridge.log("AutoSendSnsRequestHook, intent = $result")
+                XposedBridge.log("AutoSendSnsRequestHook, intent value, sayhi_with_sns_permission = $sayhi_with_sns_permission" +
+                        ", sayhi_with_sns_perm_send_verify = $sayhi_with_sns_perm_send_verify" +
+                        ", sayhi_with_jump_to_profile = $sayhi_with_jump_to_profile" +
+                        ", sayhi_with_sns_perm_add_remark = $sayhi_with_sns_perm_add_remark" +
+                        ", sayhi_with_sns_perm_set_label = $sayhi_with_sns_perm_set_label" +
+                        ", Contact_User = $Contact_User" +
+                        ", Contact_Scene = $Contact_Scene" +
+                        ", room_name = $room_name" +
+                        ", Contact_RemarkName = $Contact_RemarkName" +
+                        ", Contact_Nick = $Contact_Nick" +
+                        ", Contact_RoomNickname = $Contact_RoomNickname" +
+                        ", source_from_user_name = $source_from_user_name" +
+                        ", source_from_nick_name = $source_from_nick_name" +
+                        ", Verify_ticket = $Verify_ticket")
             }
         })
 
