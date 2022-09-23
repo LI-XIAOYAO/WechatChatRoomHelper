@@ -29,7 +29,7 @@ jobs:
     # test任务的具体步骤，可以有很多个步骤，都写在这里
     defaults:
       run:
-        shell: bash
+        #shell: bash
         working-directory: WechatChatRoomHelper
     steps:
       # 使用别人写好的指定版本的actions脚本，名称是checkout
