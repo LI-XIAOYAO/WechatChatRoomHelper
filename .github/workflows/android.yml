@@ -10,7 +10,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    concurrency: ~/WechatChatRoomHelper/Wechat_chatroom_helper_android
+    defaults:
+      run:
+        working-directory: ~/WechatChatRoomHelper/Wechat_chatroom_helper_android
     
     steps:
     - name: "Build Android project"
