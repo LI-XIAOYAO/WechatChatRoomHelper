@@ -72,7 +72,7 @@ jobs:
 
   deploy:
     name: Upload Release Asset
-        defaults:
+    defaults:
       run:
         #shell: bash
         working-directory: Wechat_chatroom_helper_android
