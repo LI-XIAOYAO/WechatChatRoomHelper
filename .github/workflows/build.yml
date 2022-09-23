@@ -48,7 +48,11 @@ jobs:
   apk:
     name: Generate APK
     runs-on: ubuntu-18.04
-
+    defaults:
+      run:
+        #shell: bash
+        working-directory: Wechat_chatroom_helper_android
+        
     steps:
       - uses: actions/checkout@v2
       - name: set up JDK 1.8
@@ -68,6 +72,11 @@ jobs:
 
   deploy:
     name: Upload Release Asset
+        defaults:
+      run:
+        #shell: bash
+        working-directory: Wechat_chatroom_helper_android
+        
     # 依赖上一个job
     needs: apk
     runs-on: ubuntu-latest
