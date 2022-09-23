@@ -30,7 +30,7 @@ jobs:
     defaults:
       run:
         #shell: bash
-        working-directory: WechatChatRoomHelper
+        working-directory: WechatChatRoomHelper/Wechat_chatroom_helper_android
     steps:
       # 使用别人写好的指定版本的actions脚本，名称是checkout
       # 这是步骤1，即每个'-'符号到下一个'-'符号之间的部分是一个步骤
